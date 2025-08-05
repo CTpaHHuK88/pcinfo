@@ -34,8 +34,6 @@ def send_welcome(message):
     else:
         bot.send_message(message.chat.id, "Access denied") 
 
-
-
 @bot.message_handler(commands=['work_rasp_pi'])
 def send_welcome(message):
     MESSAGE = f"""Система загружена:
