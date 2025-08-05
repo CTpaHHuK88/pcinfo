@@ -1,6 +1,6 @@
 import psutil, datetime
 import telebot
-from conff import DataTelebot
+from confi import DataTelebot
 import time
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 
