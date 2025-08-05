@@ -1,0 +1,18 @@
+[Unit]
+Description=Telegram Bot Service PCInfo
+After=network.target
+
+[Service]
+Type=simple
+User=admin	
+Group=admin
+WorkingDirectory=/home/admin/tbot_sbaz
+Environment="PATH=/home/admin/pcinfo/.venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+ExecStart=/home/admin/pcinfo/.venv/bin/python3 /home/admin/pcinfo/app.py
+Restart=always
+RestartSec=10
+Environment="PYTHONUNBUFFERED=1"
+
+
+[Install]
+WantedBy=multi-user.target
