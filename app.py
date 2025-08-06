@@ -30,17 +30,14 @@ def msg_hi(message):
     bot.send_message(message.chat.id, 'Thank you!')
 
 # Папка для сохранения файлов (создайте заранее)
-SAVE_PATH = 'uploaded_files/photo'
+SAVE_PATH_PHOTO = 'uploaded_files/photo'
 
-@bot.message_handler(content_types=['document', 'photo', 'audio', 'video'])
+@bot.message_handler(content_types=['photo'])
 def handle_file(message):
     if message.from_user.id in DataTelebot().USERS_ID:
         try:
             # Получаем информацию о файле
-            if message.document:
-                file_info = bot.get_file(message.document.file_id)
-                file_ext = message.document.file_name.split('.')[-1]
-            elif message.photo:
+            if message.photo:
                 file_info = bot.get_file(message.photo[-1].file_id)
                 file_ext = 'jpg'
             else:
@@ -52,7 +49,39 @@ def handle_file(message):
 
             # Сохраняем на диск
             file_name = f"file_{message.message_id}.{file_ext}"
-            file_path = os.path.join(SAVE_PATH, file_name)
+            file_path = os.path.join(SAVE_PATH_PHOTO, file_name)
+            
+            with open(file_path, 'wb') as new_file:
+                new_file.write(downloaded_file)
+
+            bot.reply_to(message, f"Файл сохранён как: {file_name}")
+
+        except Exception as e:
+            bot.reply_to(message, f"Ошибка: {str(e)}")
+
+    else:
+        bot.send_message(message.chat.id, "Access denied") 
+
+SAVE_PATH_DOCS = 'uploaded_files/docs'
+
+@bot.message_handler(content_types=['document'])
+def handle_doc(message):
+    if message.from_user.id in DataTelebot().USERS_ID:
+        try:
+            # Получаем информацию о файле
+            if message.document:
+                file_info = bot.get_file(message.document.file_id)
+                file_ext = message.document.file_name.split('.')[-1]
+            else:
+                bot.reply_to(message, "Формат файла не поддерживается.")
+                return
+
+            # Скачиваем файл
+            downloaded_file = bot.download_file(file_info.file_path)
+
+            # Сохраняем на диск
+            file_name = f"file_{message.message_id}.{file_ext}"
+            file_path = os.path.join(SAVE_PATH_DOCS, file_name)
             
             with open(file_path, 'wb') as new_file:
                 new_file.write(downloaded_file)
